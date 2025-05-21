@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static i18n vcms_tags sekizai_tags %}
+
+{% block title %}{{ content.title }}{% endblock %}
+
+{% block content %}
+
+    {% vcms_pages parent=content.url as records %}
+
+	<div class="row">
+
+        {% for record in records %}
+
+			<div class="col-sm-6">
+			<div class="card">
+
+			  <div class="card-body">
+				  <h5 class="card-title"><a href="{% url 'content:page' record.url %}" class="blog-post-title">{{ record.title }}</a></h5>
+				{{ record.short_content|safe }}
+			  </div>
+			</div>
+			</div>
+
+{#            <div class="row">#}
+{#                <div class="post">#}
+{#                    <a href="{% url 'content:page' record.url %}" class="blog-post-title">{{ record.title }}</a>#}
+{#                    {{ record.short_content|safe }} <br />#}
+{#                </div>#}
+{#            </div>#}
+        {% endfor %}
+	</div>
+{% endblock %}
+

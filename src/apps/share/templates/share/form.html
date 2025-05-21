@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% load sekizai_tags static i18n widget_tweaks  %}
+
+{% block title %}{% trans 'Create new snippet' %}{% endblock %}
+
+{% block content %}
+
+{% addtoblock 'css' %}
+
+<style>
+.tabs {
+	min-width: 320px;
+	max-width: 100%;
+	padding: 0px;
+	margin: 0 auto;
+}
+.tabs>section {
+	display: none;
+	padding: 15px;
+	background: #fff;
+	border: 1px solid #ddd;
+}
+.tabs>section>p {
+	margin: 0 0 5px;
+	line-height: 1.5;
+	color: #383838;
+	-webkit-animation-duration: 1s;
+	animation-duration: 1s;
+	-webkit-animation-fill-mode: both;
+	animation-fill-mode: both;
+	-webkit-animation-name: fadeIn;
+	animation-name: fadeIn;
+}
+@-webkit-keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+.tabs>input {
+	display: none;
+	position: absolute;
+}
+.tabs>label {
+	display: inline-block;
+	margin: 0 0 -1px;
+	padding: 15px 25px;
+	font-weight: 600;
+	text-align: center;
+	color: #aaa;
+	border: 0px solid #ddd;
+	border-width: 1px 1px 1px 1px;
+	background: #f1f1f1;
+	border-radius: 3px 3px 0 0;
+}
+.tabs>label:before {
+	font-family: fontawesome;
+	font-weight: normal;
+	margin-right: 10px;
+}
+.tabs>label:hover {
+	color: #888;
+	cursor: pointer;
+}
+.tabs>input:checked+label {
+	color: #555;
+	border-top: 1px solid #009933;
+	border-bottom: 1px solid #fff;
+	background: #fff;
+}
+#tab1:checked~#content-tab1, #tab2:checked~#content-tab2, #tab3:checked~#content-tab3, #tab4:checked~#content-tab4 {
+	display: block;
+}
+@media screen and (max-width: 680px) {
+	.tabs>label {
+		font-size: 0;
+	}
+	.tabs>label:before {
+		margin: 0;
+		font-size: 18px;
+	}
+}
+@media screen and (max-width: 400px) {
+	.tabs>label {
+		padding: 15px;
+	}
+}
+</style>
+    {{ form.media.css }}
+{% endaddtoblock %}
+
+{#    {% addtoblock 'head' %}{{ form.media }}{% endaddtoblock %}#}
+
+    {% addtoblock 'js' %}
+
+<script>
+var django = django || {};
+django.jQuery = jQuery.noConflict(false);
+
+    jQuery(document).ready(function ($) {
+        $('#id_time_delete').datepicker({format: 'yyyy-mm-dd'});
+    });
+</script>
+<script type="text/javascript" src="/static/datepicker/datepicker.js"></script>
+<script type="text/javascript" src="/static/jquery-autosuggest/js/jquery.autoSuggest.minified.js"></script>
+{#        {{ form.media.js }}#}
+
+    {% endaddtoblock %}
+{#{{ form.media.css }}#}
+<style type="text/css">
+ul.as-selections li.as-original input {  height: auto !important;  }
+#id_tags { display: none; !important;  }
+</style>
+    <form action="" method="post" accept-charset="utf-8" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-11">
+        <h2>{% if instance %}{% trans 'Edit record' %}{% else %}{% trans 'Create new record' %}{% endif %}</h2>
+            {{ form.non_field_errors }}
+
+            <div class="form-group">
+                {{ form.title.errors }}
+                <label for="{{ form.title.id_for_label }}">Title:</label>
+                {% render_field form.title class='form-control' %}
+            </div>
+
+            <div class="form-group">
+                {{ form.description.errors }}
+                <label for="{{ form.description.id_for_label }}">Description:</label>
+                {% render_field form.description class='form-control' rows=5 %}
+            </div>
+
+            <div class="tabs">
+                <input id="tab1" type="radio" name="tabs" checked>
+                <label for="tab1" title="Wordpress">{% trans 'Text content' %}</label>
+                <input id="tab2" type="radio" name="tabs">
+                <label for="tab2" title="Windows">{% trans 'Upload content' %}</label>
+                <input id="tab3" type="radio" name="tabs">
+                <label for="tab3" title="HTML5">{% trans 'URL redirect' %}</label>
+                <section id="content-tab1">
+                    <div class="form-group">
+                        {{ form.content.errors }}
+                        <label for="{{ form.content.id_for_label }}">Content:</label>
+                        {% render_field form.content class='form-control' %}
+                    </div>
+                </section>
+                <section id="content-tab2">
+                    <div class="custom-file">
+                        {{ form.file.errors }}
+                        <label class="custom-file-label" for="{{ form.file.id_for_label }}">File:</label>
+{#                        {% render_field form.file class='custom-file-input' %}#}
+                        <input type="file" name="file" class="custom-file-input" id="id_file" multiple>
+                    </div>
+
+                    {% if instance %}
+                        {{ form.delete_file }}
+{#                        <br /><br />#}
+{#                        {% for file in instance.file_share.all %}#}
+{#                            <div class="row">#}
+{#                                <div class="col-md-11"><input type="checkbox" name="delete_file" value="{{ file.uuid }}"> {{ file.name }} </div>#}
+{#                            </div>#}
+{#                        {% endfor %}#}
+                            <div class="row">
+                                <div class="col-md-11">{% trans 'Check file for delete' %}</div>
+                            </div>
+                    {% endif %}
+
+                </section>
+                <section id="content-tab3">
+                    <div class="form-group">
+                        {{ form.url.errors }}
+                        <label for="{{ form.url.id_for_label }}">URL:</label>
+                        {% render_field form.url class='form-control' %}
+                    </div>
+                </section>
+            </div>
+
+            <div class="form-row">
+                <div class="col-md-2 mb-2">
+                    <div class="form-check">
+                        {{ form.hidden.errors }}
+                        {% render_field form.hidden class="form-check-input" %}
+                        <label class="form-check-label">Hidden:</label>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <div class="form-group">
+                        {{ form.tags.errors }}
+                        <label for="{{ form.tags.id_for_label }}">Tags:</label>
+                        {% render_field form.tags class='form-control' %}
+                    </div>
+                </div>
+                <div class="col-md-2 mb-2">
+                    <div class="form-group">
+                        {{ form.type.errors }}
+                        <label for="{{ form.type.id_for_label }}">Type:</label>
+                        {% render_field form.type class='form-control' %}
+                    </div>
+                </div>
+                <div class="col-md-2 mb-2">
+                    <div class="form-group">
+                        {{ form.time_delete.errors }}
+                        <label>Delete on:</label>
+                        {% render_field form.time_delete class='form-control' %}
+                    </div>
+                </div>
+            </div>
+
+             <button class="btn btn-primary" name="save" type="submit">{% trans 'Save snippet' %}</button>
+            {% if instance.id %}
+                <button class="btn btn-danger" name="delete" value="delete" type="submit">{% trans 'Delete' %}</button>
+            {% endif %}
+        </div>
+    </div>
+    </form>
+
+
+{% endblock %}
+

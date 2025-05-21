@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load vcms_tags i18n staticfiles %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    {% get_current_language as LANGUAGE_CODE %}
+    {% content_annotate_list show_hidden=True as pages %}
+    <div class="row">
+        <div class="col-auto">
+
+{#            <ul>#}
+{#            {% for page in pages %}#}
+{#                <li><a href="{{ page.reverse }}">{{ page.title }}</a></li>#}
+{#            {% endfor %}#}
+{#            </ul>#}
+
+{% for item, info in pages %}
+    {% if info.open %}
+        <ul><li>
+    {% else %}
+        </li><li>
+    {% endif %}
+
+    <a href="{{ item.reverse }}">{{ item.title }}</a>
+
+    {% for close in info.close %}
+        </li></ul>
+    {% endfor %}
+{% endfor %}
+
+        </div>
+    </div>
+{% endblock %}

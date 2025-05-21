@@ -1,0 +1,127 @@
+code[class*="language-"], pre {
+    color: #666666;
+    direction: ltr;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+}
+
+@media print {
+    code[class*="language-"], pre {
+        text-shadow: none;
+    }
+}
+
+pre, :not(pre) > code[class*="language-"] {
+    background: #F0F0F0;
+}
+
+pre {
+    padding: 1em;
+    margin: 0.5em 0;
+    overflow: auto;
+    border: 0.1em solid #AAAAAA;
+}
+
+:not(pre) > code[class*="language-"] {
+    padding: 0.15em 0.2em 0.05em;
+    border: 0.1em solid #AAAAAA;
+    white-space: normal;
+}
+
+.token.comment, .token.prolog, .token.doctype, .token.cdata {
+    color: hsl(30, 20%, 50%);
+}
+
+.token.punctuation {
+    opacity: 0.7;
+}
+
+.namespace {
+    opacity: 0.7;
+}
+
+.token.property, .token.tag, .token.boolean, .token.number, .token.constant, .token.symbol {
+    color: hsl(350, 45%, 44%);
+}
+
+.token.selector, .token.attr-name, .token.string, .token.char, .token.builtin, .token.inserted {
+    color: #7CA305;
+}
+
+.token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string, .token.variable {
+    color: hsl(228, 95%, 43%);
+}
+
+.token.atrule, .token.attr-value, .token.keyword {
+    color: hsl(350, 46%, 53%);
+}
+
+.token.regex, .token.important {
+    color: #C88409;
+}
+
+.token.important, .token.bold {
+    font-weight: bold;
+}
+
+.token.italic {
+    font-style: italic;
+}
+
+.token.entity {
+    cursor: help;
+}
+
+.token.deleted {
+    color: red;
+}
+
+pre {
+    position: relative;
+    padding-left: 3.8em;
+    counter-reset: linenumber;
+}
+
+pre > code {
+    position: relative;
+}
+
+pre > code .line-numbers-rows {
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    font-size: 100%;
+    left: -3.8em;
+    width: 3em;
+    letter-spacing: -1px;
+    border-right: 1px solid #999;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.line-numbers-rows > span {
+    pointer-events: none;
+    display: block;
+    counter-increment: linenumber;
+}
+
+.line-numbers-rows > span:before {
+    content: counter(linenumber);
+    color: #000000;
+    display: block;
+    padding-right: 0.8em;
+    text-align: right;
+}

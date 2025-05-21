@@ -1,0 +1,51 @@
+# -*- coding: utf-8 -*-
+__author__ = 'Vadim Kravciuk'
+
+import os
+
+SECRET_KEY = 'bvhaviahivGbkjsf(jbkjggygsf0983535'
+
+DEBUG = True
+ALLOWED_HOSTS = ['dev.localhost']
+
+DBBACKUP_HOSTNAME = ALLOWED_HOSTS[0]
+#pip install django-storages
+#DBBACKUP_STORAGE = 'storages.backends.ftp.FTPStorage
+#DBBACKUP_STORAGE_OPTIONS = {
+#    'location': 'ftp://user:pass@server:21'
+#}
+
+DEFAULT_FROM_EMAIL = 'noreply@domain.com'
+DEFAULT_FROM_NAME = 'Site Owner'
+DEFAULT_CONTACT_EMAIL = 'admin@domain.com'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
+
+if DEBUG is True:
+    LOCAL_MIDDLEWARE = [
+    ]
+
+    TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [],
+            'OPTIONS': {
+                'debug': True,
+                'context_processors': [
+                    'django.template.context_processors.debug',
+                    'django.template.context_processors.request',
+                    'django.contrib.auth.context_processors.auth',
+                    'django.contrib.messages.context_processors.messages',
+                    'sekizai.context_processors.sekizai',
+                ],
+                'loaders': [
+                    'django.template.loaders.app_directories.Loader',
+                ],
+            },
+        },
+    ]
+

@@ -1,0 +1,23 @@
+{% load static %}
+{% if menu %}
+    <link rel="stylesheet" type="text/css" href="{% static 'content/css/iconmenu.css' %}" />
+<script type="text/javascript">
+
+window.jQuery || document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"><\/script>')
+</script><script src="{% static 'content/js/iconmenu.js' %}"></script>
+    <script>ddiconmenu.docinit({menuid:'myiconmenu', easing:"easeInOutCirc", dur:500 })</script>
+
+<ul id="myiconmenu" class="iconmenu">
+    {% if current_page_hash %}<li><a href="{% url 'content:edit' 'page' %}?page={{ current_page_hash }}">E</a></li>{% endif %}
+    <li><a href="#" rel="csslibrary">+</a></li>
+    <li><a href="{% url 'admin:index' %}" target="_blank">*</a></li>
+</ul>
+
+<div id="csslibrary" class="iconsubmenu dropdownmenu">
+    <ul class="ulmenu">
+        <li><a href="{% url 'content:edit' 'page' %}?after={{ current_page_hash|default:'' }}"><i class="icon-file-text-alt"></i> Add page</a></li>
+        <li><a href="{% url 'share:add' %}"><i class="icon-code"></i> Add snippet</a></li>
+    </ul>
+</div>
+
+{% endif %}

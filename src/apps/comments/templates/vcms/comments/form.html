@@ -1,0 +1,84 @@
+
+{% for record in records %}
+    <div class="row">
+
+        <div class="col_1_6" {% if not record.approved %}style="background-color: #e0bf6e"{% endif %}>{{ record.user }}</div>
+        <div class="col_5_6">{% if moderate_permission %}
+            Approve / Delete
+        {% endif %}<blockquote>{{ record.comment }}</blockquote></div>
+    </div>
+{% endfor %}
+
+{% if obj.allow_comment %}
+    {% if request.user.is_authenticated %}
+        <div id="jj_12">
+            <form id="comment_form">
+            <input type="hidden" name="comment_for" id="comment_for" value="{{ parent }}">
+            <input type="hidden" name="comment_to" id="comment_to" value="">
+            <textarea style="width: 100%; height: 100px;" name="comment" id="comment">Test comment</textarea>
+            </form>
+            <button id="submit_comment" >Submit</button>
+        </div>
+        <div id="jj_12_success" style="display: none">Comments has added.</div>
+        <div id="jj_12_error" style="display: none">Error adding comment.</div>
+    {% else %}
+        {% include 'login_block.html' %}
+    {% endif %}
+
+{% endif %}
+<div></div>
+<script>
+
+jQuery.noConflict()(function ($) {
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+var csrftoken = getCookie('csrftoken');
+
+$( "#submit_comment" ).click(function() {
+      var form_data = JSON.stringify($("#comment_form").serializeArray());
+
+      var data = {}
+      data.comment_for = $('#comment_for').val();
+      data.comment_to = $('#comment_to').val();
+      data.comment = $('#comment').val();
+
+     $.ajax({
+             type: "POST",
+             url: "/api/comments/",
+             data: JSON.stringify(data),
+             contentType: "application/json; charset=utf-8",
+             dataType: "json",
+             crossDomain:false,
+             success: function (data, status, jqXHR) {
+
+                 alert("success");// write success in " "
+             },
+
+             error: function (jqXHR, status) {
+                 // error handler
+                 console.log(jqXHR);
+                 alert('fail: ' + status.code);
+             },
+            beforeSend: function(xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+          });
+
+    });
+
+});
+</script>

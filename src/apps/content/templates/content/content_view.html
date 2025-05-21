@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static i18n vcms_tags sekizai_tags %}
+
+{% block title %}{{ content.title }}{% endblock %}
+
+{% block content %}
+{% addtoblock 'js' %}<script src="/static/ckeditor/ckeditor/plugins/prism/lib/prism/prism_patched.min.js"></script>{% endaddtoblock %}
+{% addtoblock 'css' %}<link href="/static/ckeditor/ckeditor/plugins/prism/lib/prism/prism_patched.min.css" rel="stylesheet">{% endaddtoblock %}
+
+    <h1>{{ content.title }}</h1>
+
+    {{ content.content|safe }}
+
+    {% vcms_comment content %}
+
+{% endblock %}
+

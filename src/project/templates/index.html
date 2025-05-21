@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load vcms_tags i18n sekizai_tags static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+    {% addtoblock 'js' %}
+<script src="{% static 'jquery/jquery-2.2.4.min.js' %}"></script>
+<script src="{% static 'jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'infinite.min.js' %}"></script>
+    {% endaddtoblock %}
+
+
+    {% get_current_language as LANGUAGE_CODE %}
+    {% vcms_pages category='index' lang=LANGUAGE_CODE as pages %}
+    <div class="row">
+        <div class="col-auto">
+
+        <div class="card-columns infinite-container">
+        {% for page in pages %}
+
+            <div class="card infinite-item">
+              <div class="card-body text-dark">
+                <h5 class="card-title"><a href="{{ page.reverse }}">{{ page.title }}</a></h5>
+                <p class="card-text">{{ page.short_content|safe }}</p>
+              </div>
+            </div>
+
+        {% endfor %}
+        </div>
+
+        </div>
+    </div>
+
+  {% if pages.has_next %}
+    <a class="infinite-more-link" href="?page={{ pages.next_page_number }}">{% trans 'Далее' %}</a>
+  {% endif %}
+
+  <div class="loading" style="display: none;">
+    Loading...
+  </div>
+
+  <script>
+    var infinite = new Waypoint.Infinite({
+      element: $('.infinite-container')[0],
+      onBeforePageLoad: function () {
+        $('.loading').show();
+      },
+      onAfterPageLoad: function ($items) {
+        $('.loading').hide();
+      }
+    });
+  </script>
+
+{% endblock %}
