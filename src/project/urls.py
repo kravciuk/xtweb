@@ -38,6 +38,7 @@ if 'silk' in settings.INSTALLED_APPS:
 
 urlpatterns += i18n_patterns(
     re_path(r'^$',TemplateView.as_view(template_name='index.html'), name="index"),
+    path('healthcheck/',TemplateView.as_view(template_name='healthcheck.html'), name="healthcheck"),
     path('self/', TemplateView.as_view(template_name='local.html'), name="local"),
     re_path(r'^sitemap-content/$',TemplateView.as_view(template_name='sitemap.html'), name="sitemap_content_html"),
 
@@ -55,5 +56,5 @@ if settings.DEBUG is True:
 
 
 websocket_urlpatterns = [
-    # re_path(r"ws/game/$", consumers.MultiplayerConsumer.as_asgi()),
+    # path("ws/game/", consumers.MultiplayerConsumer.as_asgi()),
 ]

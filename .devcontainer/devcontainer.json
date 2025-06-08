@@ -1,0 +1,10 @@
+{
+  "name": "Xtweb docker",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "../",
+    "args": {
+      "VARIANT": "latest"
+    }
+  }
+}

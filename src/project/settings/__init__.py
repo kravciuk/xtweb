@@ -43,7 +43,7 @@ INSTALLED_APPS = (
     'ckeditor',
     'ckeditor_uploader',
     'django_celery_results',
-    'django_celery_beat',    
+    'django_celery_beat',
 
     # 'vu',
     # 'vu.sendfile',
@@ -92,6 +92,7 @@ ASGI_APPLICATION = "project.asgi.application"
 
 # create var dir
 if os.path.exists(VAR_DIR) is False:
+    print("Creating var directory at %s" % VAR_DIR)
     os.makedirs(VAR_DIR+'/htdocs')
     os.makedirs(VAR_DIR+'/htdocs/static')
     os.makedirs(VAR_DIR+'/htdocs/media')

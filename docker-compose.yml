@@ -8,12 +8,16 @@ services:
     command: python src/manage.py runserver 0.0.0.0:8000
     container_name: xtweb_main
     entrypoint: /app/entrypoint.sh
+    user: django:django
     volumes:
       - .:/app
     env_file:
       - ./.env
-    # ports:
-    #   - 80:8000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/healthcheck/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     depends_on:
       - redis
       - postgres
@@ -58,12 +62,14 @@ services:
       - ./docker/volumes/angie/logs:/var/log/angie
     restart: always
     depends_on:
-      - web    
+      web:
+        condition: service_healthy
   celery:
     build:
       context: .
       dockerfile: Dockerfile
-    command: 
+    user: django:django
+    command:
       - /bin/sh
       - -c
       - |
@@ -86,4 +92,22 @@ services:
     ports:
        - 3000:3000
     stdin_open: true
-    tty: true       
+    tty: true
+  ssh-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        INSTALL_SSH: "true"
+    container_name: xtweb_ssh
+#    privileged: true
+    user: root:root
+    ports:
+      - "2222:22"
+    volumes:
+      - .:/app
+    env_file:
+      - ./.env
+    command: /usr/sbin/sshd -D
+    depends_on:
+      - web
