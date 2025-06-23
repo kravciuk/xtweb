@@ -52,7 +52,7 @@ class TagAutoSuggest(forms.TextInput):
             **kwargs
         )
 
-        js = u"""
+        js = """
             <script type="text/javascript">
             (function ($) {
                 var tags_as_string;

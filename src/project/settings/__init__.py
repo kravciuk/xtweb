@@ -40,8 +40,8 @@ INSTALLED_APPS = (
     'taggit_autosuggest',
     'treebeard',
     'sitetree',
-    'ckeditor',
-    'ckeditor_uploader',
+    'django_ckeditor_5',
+    # 'ckeditor_uploader',
     'django_celery_results',
     'django_celery_beat',
 
@@ -50,8 +50,8 @@ INSTALLED_APPS = (
 
 
     'content',
-    'share',
-    'comments',
+    # 'share',
+    # 'comments',
     'project',
 
 )

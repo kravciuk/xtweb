@@ -1,10 +1,10 @@
-version: "3.9"
-
 services:
   web:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        DJANGO_USER_PASSWORD: ${DJANGO_USER_PASSWORD}
     command: python src/manage.py runserver 0.0.0.0:8000
     container_name: xtweb_main
     entrypoint: /app/entrypoint.sh
@@ -21,20 +21,38 @@ services:
     depends_on:
       - redis
       - postgres
+#  postgres:
+#    container_name: xtweb_postgis
+#    image: postgis/postgis:17-master
+#    environment:
+#      - POSTGRES_DB=xtweb
+#      - POSTGRES_USER=xtweb
+#      - POSTGRES_PASSWORD=xtweb
+#    volumes:
+#      - ./docker/volumes/pgdata:/var/lib/postgresql/data
+#    ports:
+#      - "5432:5432"
+#    restart: unless-stopped
+#    healthcheck:
+#      test: ["CMD-SHELL", "pg_isready -U xtweb"]
+#      start_period: 10s
+#      interval: 60s
+#      timeout: 5s
+#      retries: 3
   postgres:
     container_name: xtweb_postgis
     image: postgis/postgis:17-master
     environment:
-      - POSTGRES_DB=xtweb
-      - POSTGRES_USER=xtweb
-      - POSTGRES_PASSWORD=xtweb
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_LOGIN}
+      - POSTGRES_PASSWORD=${DB_PASS}
     volumes:
       - ./docker/volumes/pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U xtweb"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_LOGIN}"]
       start_period: 10s
       interval: 60s
       timeout: 5s
@@ -64,24 +82,26 @@ services:
     depends_on:
       web:
         condition: service_healthy
-  celery:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    user: django:django
-    command:
-      - /bin/sh
-      - -c
-      - |
-        celery --workdir=src -A project worker -E -l INFO -n worker --autoscale=10,2  --pool=gevent --concurrency=500 --max-tasks-per-child=1000
-        celery --workdir=src -A project beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
-    container_name: xtweb_celery
-    volumes:
-      - .:/app
-    env_file:
-      - ./.env
-    depends_on:
-      - web
+#  celery:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#      args:
+#        DJANGO_USER_PASSWORD: ${DJANGO_USER_PASSWORD}
+#    user: django:django
+#    command:
+#      - /bin/sh
+#      - -c
+#      - |
+#        celery --workdir=src -A project worker -E -l INFO -n worker --autoscale=10,2  --pool=gevent --concurrency=500 --max-tasks-per-child=1000
+#        celery --workdir=src -A project beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+#    container_name: xtweb_celery
+#    volumes:
+#      - .:/app
+#    env_file:
+#      - ./.env
+#    depends_on:
+#      - web
   frontend:
     build:
       context: ./frontend
@@ -98,7 +118,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        INSTALL_SSH: "true"
+        DJANGO_USER_PASSWORD: ${DJANGO_USER_PASSWORD}
     container_name: xtweb_ssh
 #    privileged: true
     user: root:root

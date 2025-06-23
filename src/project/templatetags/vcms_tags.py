@@ -12,8 +12,6 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.urls import reverse
 
 from content.models import Content
-from share.models import Share
-from comments.models import Comment
 
 register = template.Library()
 
@@ -23,9 +21,9 @@ log = getLogger(__name__)
 
 @register.simple_tag(takes_context=True)
 def content_root_tree(context, show_hidden=False):
-    rs = Content.objects.filter(enabled=True, depth=1, language=get_language()).order_by('path')
+    rs = Content.objects.filter(is_enabled=True, depth=1, language=get_language()).order_by('path')
     if show_hidden is False:
-        rs = rs.filter(hidden=False)
+        rs = rs.filter(is_hidden=False)
     return rs
 
 
@@ -33,49 +31,13 @@ def content_root_tree(context, show_hidden=False):
 def content_annotate_list(context, show_hidden=False):
     rs = Content.get_annotated_list()
     if show_hidden is False:
-        rs = rs.filter(hidden=False)
+        rs = rs.filter(is_hidden=False)
     return rs
 
 
 @register.filter(name='addclass')
 def addclass(field, my_class):
    return field.as_widget(attrs={"class":my_class})
-
-
-@register.inclusion_tag('vcms/comments/form.html', takes_context=True)
-def vcms_comment(context, obj):
-    moderate_permission = False
-
-    d = ContentType.objects.get_for_model(obj)
-    rs = Comment.objects.filter(content_type=d, content_pk=obj.pk)
-    if context['request'].user.is_superuser is False:
-        rs = rs.filter(approved=True)
-
-    if context['request'].user.is_superuser is True:
-        moderate_permission = True
-
-    return {
-        'moderate_permission': moderate_permission,
-        'records': rs,
-        'obj': obj,
-        'parent': encrypt(settings.SECRET_KEY, "%s:%s" % (d.pk, obj.pk)),
-        'request': context['request'],
-    }
-
-
-@register.simple_tag(takes_context=True)
-def old_ie_browser(context):
-    is_old = False
-    if 'HTTP_USER_AGENT' in context['request'].META:
-        user_agent = context['request'].META['HTTP_USER_AGENT']
-        pattern = "msie [1-8]\."
-        prog = re.compile(pattern, re.IGNORECASE)
-        match = prog.search(user_agent)
-
-        if match:
-            is_old = True
-
-    return is_old
 
 
 @register.simple_tag(takes_context=True)
@@ -97,9 +59,8 @@ def content_edit_link(context, obj):
 @register.simple_tag
 def vcms_page(*args, **kwargs):
     url = kwargs.get('url')
-
     try:
-        return Content.objects.filter(enabled=True, url=url).get()
+        return Content.objects.filter(is_enabled=True, url=url).get()
     except Exception as e:
         log.error('Cannot get page by url: %s'% url)
         return None
@@ -107,26 +68,22 @@ def vcms_page(*args, **kwargs):
 
 @register.simple_tag(takes_context=True)
 def vcms_pages(context, *args, **kwargs):
-    category = kwargs.get('category')
     parent = kwargs.get('parent')
     language = kwargs.get('lang')
     limit = kwargs.get('limit', 10)
     page = context['request'].GET.get('page', 1)
 
-    rs = Content.objects.filter(enabled=True)
+    rs = Content.objects.filter(is_enabled=True)
     if parent:
         try:
             rs = rs.filter(url=parent).get().get_children()
         except:
             return []
 
-    if category:
-        rs = rs.filter(category__slug=category)
-
     if language:
         rs = rs.filter(language=language)
 
-    rs = rs.filter(hidden=False).order_by('-date_published', '-id')
+    rs = rs.filter(is_hidden=False).order_by('-date_published', '-id')
     paginator = Paginator(rs, limit)
 
     try:
@@ -139,16 +96,16 @@ def vcms_pages(context, *args, **kwargs):
     return result
 
 
-@register.simple_tag()
-def last_snippets(snippet_type='source', limit=20, show_hidden=False):
-    res = Share.objects.filter(type=snippet_type, password='', disabled=False, personal=False)
-    if show_hidden is False:
-        res = res.filter(hidden=False)
-    res = res.order_by('-pk')[:limit]
-
-    return {
-        'records': res
-    }
+# @register.simple_tag()
+# def last_snippets(snippet_type='source', limit=20, show_hidden=False):
+#     res = Share.objects.filter(type=snippet_type, password='', disabled=False, personal=False)
+#     if show_hidden is False:
+#         res = res.filter(hidden=False)
+#     res = res.order_by('-pk')[:limit]
+#
+#     return {
+#         'records': res
+#     }
 
 
 @register.simple_tag(takes_context=True)
@@ -174,10 +131,3 @@ def web_path(context, scheme='auto'):
     return "%s://%s" % (scheme, context['request'].get_host())
 
 
-# @register.simple_tag()
-# def content_get_snippet(name):
-#     rs = Snippet.objects.select_related().filter(slug=name)
-#     if rs:
-#         return mark_safe(rs[0].content)
-#     else:
-#         return None

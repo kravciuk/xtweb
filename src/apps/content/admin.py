@@ -5,18 +5,13 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from treebeard.admin import TreeAdmin
 from treebeard.forms import movenodeform_factory
-from .models import Category, Content
-
-
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'enabled', 'hidden')
-    prepopulated_fields = {'slug': ('name',)}
+from .models import Content
 
 
 class ContentAdmin(TreeAdmin):
     form = movenodeform_factory(Content)
-    list_display = ('title', 'enabled', 'hidden', 'slug')
-    list_filter = ['enabled', 'hidden', 'category', 'type']
+    list_display = ('title', 'is_enabled', 'is_hidden', 'type', 'slug')
+    list_filter = ['is_enabled', 'is_hidden', 'type', 'type']
     prepopulated_fields = {'slug': ('title',)}
 
 
@@ -36,5 +31,4 @@ class ContentAdmin(TreeAdmin):
         obj.save()
 
 
-admin.site.register(Category, CategoryAdmin)
 admin.site.register(Content, ContentAdmin)

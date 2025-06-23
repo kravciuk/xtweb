@@ -21,32 +21,41 @@ VCMS_TEMPLATES = (
 
 # Configure CKEDITOR
 # -----------------------------------------------------------------------------------
-CKEDITOR_UPLOAD_PATH = "uploads/"
-CKEDITOR_IMAGE_BACKEND = 'pillow'
-CKEDITOR_CONFIGS = {
-    'default': {
-        # 'stylesSet': 'my_styles:/static/ckeditor/styles.js',
-        'extraPlugins': 'dialogui,dialog,about,a11yhelp,basicstyles,blockquote,clipboard,panel,floatpanel,menu,'
-                        'contextmenu,resize,button,toolbar,elementspath,enterkey,entities,popup,filebrowser,'
-                        'floatingspace,listblock,richcombo,format,horizontalrule,htmlwriter,wysiwygarea,image,'
-                        'indent,indentlist,fakeobjects,link,list,magicline,maximize,pastetext,pastefromword,'
-                        'removeformat,showborders,sourcearea,specialchar,menubutton,scayt,stylescombo,tab,table,'
-                        'tabletools,undo,wsc,lineutils,widget,notification,notificationaggregator,embedbase,'
-                        'embed,filetools,codesnippet,prism',
-        'toolbar': 'Full',
-        'height': 300,
-        'width': '100%',
-        'toolbar_Full': [
-        ['Styles', 'Format', 'Bold', 'Italic', 'Underline', 'Strike', '-', 'RemoveFormat' ],
-        ['Image', 'Table', 'HorizontalRule', 'PageBreak', 'CodeSnippet'],
-        ['TextColor', 'BGColor'],
-        ['Link', 'Unlink', 'Embed'],
-        ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-        ['Source', '-''NewPage', 'Preview', 'Templates', 'PasteText'],
-        ['Maximize', 'ShowBlocks'],
-    ],
-    },
+CKEDITOR_5_FILE_UPLOAD_PERMISSION = 'staff'
+CKEDITOR_5_CONFIGS = {
+  'default': {
+      'toolbar': ['heading', '|', 'bold', 'italic', 'link',
+                  'bulletedList', 'numberedList', 'blockQuote', 'imageUpload', ],
+      'language': 'de',
+  },
 }
+
+# CKEDITOR_UPLOAD_PATH = "uploads/"
+# CKEDITOR_IMAGE_BACKEND = 'pillow'
+# CKEDITOR_CONFIGS = {
+#     'default': {
+#         # 'stylesSet': 'my_styles:/static/ckeditor/styles.js',
+#         'extraPlugins': 'dialogui,dialog,about,a11yhelp,basicstyles,blockquote,clipboard,panel,floatpanel,menu,'
+#                         'contextmenu,resize,button,toolbar,elementspath,enterkey,entities,popup,filebrowser,'
+#                         'floatingspace,listblock,richcombo,format,horizontalrule,htmlwriter,wysiwygarea,image,'
+#                         'indent,indentlist,fakeobjects,link,list,magicline,maximize,pastetext,pastefromword,'
+#                         'removeformat,showborders,sourcearea,specialchar,menubutton,scayt,stylescombo,tab,table,'
+#                         'tabletools,undo,wsc,lineutils,widget,notification,notificationaggregator,embedbase,'
+#                         'embed,filetools,codesnippet,prism',
+#         'toolbar': 'Full',
+#         'height': 300,
+#         'width': '100%',
+#         'toolbar_Full': [
+#         ['Styles', 'Format', 'Bold', 'Italic', 'Underline', 'Strike', '-', 'RemoveFormat' ],
+#         ['Image', 'Table', 'HorizontalRule', 'PageBreak', 'CodeSnippet'],
+#         ['TextColor', 'BGColor'],
+#         ['Link', 'Unlink', 'Embed'],
+#         ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+#         ['Source', '-''NewPage', 'Preview', 'Templates', 'PasteText'],
+#         ['Maximize', 'ShowBlocks'],
+#     ],
+#     },
+# }
 
 SENDFILE_BACKEND = 'vu.sendfile.backends.nginx'
 SENDFILE_ROOT = os.path.join(MEDIA_ROOT, 'share')

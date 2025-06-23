@@ -28,7 +28,7 @@ urlpatterns = [
     re_path(r'^sitemap\.xml$', sitemap_views.index, {'sitemaps': sitemaps}),
     re_path(r'^sitemap-(?P<section>.+)\.xml$', sitemap_views.sitemap, {'sitemaps': sitemaps}),
     re_path(r'^taggit_autosuggest/', include('taggit_autosuggest.urls')),
-    re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
+    path("ckeditor5/", include('django_ckeditor_5.urls')),
     re_path(r'^select2/', include('django_select2.urls')),
     path('api/', include('project.api.urls')),
 ]
@@ -43,7 +43,7 @@ urlpatterns += i18n_patterns(
     re_path(r'^sitemap-content/$',TemplateView.as_view(template_name='sitemap.html'), name="sitemap_content_html"),
 
     re_path(r'^i18n/', include('django.conf.urls.i18n')),
-    re_path(r'^share/', include('share.urls')),
+    # re_path(r'^share/', include('share.urls')),
 
      # path('example/', include('example.urls', namespace='example')),
      path('', include('content.urls')),
