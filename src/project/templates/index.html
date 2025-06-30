@@ -22,7 +22,7 @@
 
             <div class="card infinite-item">
               <div class="card-body text-dark">
-                <h5 class="card-title"><a href="{{ page.reverse }}">{{ page.title }}</a></h5>
+                <h5 class="card-title"><a href="{{ page.reverse }}">{{ page.title|default:page.uuid }}</a></h5>
                 <p class="card-text">{{ page.short_content|safe }}</p>
               </div>
             </div>

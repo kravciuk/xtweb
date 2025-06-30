@@ -27,9 +27,9 @@
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
 {% endaddtoblock %}
 
-    
-    
-    {{ form.media.css }}
+
+
+    {{ form.media }}
 
     <style type="text/css">
     ul.as-selections li.as-original input {  height: auto !important;  }
@@ -52,7 +52,7 @@
 
     <form action="" method="post" accept-charset="utf-8" enctype="multipart/form-data">
         {% csrf_token %}
-        {{  form.after }}
+        {{ form.after }}
         {{ form.page }}
         {{ form.non_field_errors }}
 
@@ -95,33 +95,14 @@
                         {% render_field form.template class='form-control' %}
                     </fieldset>
                 </div>
-                <div class="col-md-4 mb-2">
-                    <fieldset>
-                        {{ form.category.errors }}
-                        <label class="control-label" for="{{ form.category.id_for_label }}">Category:</label>
-                        {% render_field form.category class='form-control' %}
-                    </fieldset>
-                </div>
             </div>
-
-            <fieldset>
-                {{ form.meta_keywords.errors }}
-                <label class="control-label" for="{{ form.meta_keywords.id_for_label }}">Keywords:</label>
-                {{ form.meta_keywords|addclass:'form-control col-9' }}
-            </fieldset>
-
-            <fieldset>
-                {{ form.meta_description.errors }}
-                <label class="control-label" for="{{ form.meta_description.id_for_label }}">Description:</label>
-                {{ form.meta_description|addclass:'form-control col-9' }}
-            </fieldset>
 
             <diw class="row">
                 <div class="col">
                     <fieldset>
-                        {{ form.enabled }} is enabled <br />
-                        {{ form.hidden }} hide from menu <br />
-                        {{ form.comments }} allow comments <br />
+                        {{ form.is_published }} is published <br />
+                        {{ form.is_hidden }} hide from menu <br />
+                        {{ form.allow_comments }} allow comments <br />
                     </fieldset>
                 </div>
                 <div class="col">

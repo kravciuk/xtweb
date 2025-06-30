@@ -86,9 +86,9 @@ class Content(AL_Node, Base):
     content = models.TextField(_(u'Content'), blank=True)
 
     # Access settings
-    allow_comments = models.BooleanField(_(u'Allow comments'), default=False)
-    is_enabled = models.BooleanField(_(u'Enabled'), default=True, db_index=True)
+    is_published = models.BooleanField(_(u'Published'), default=False, db_index=True)
     is_hidden = models.BooleanField(_(u'Is hidden'), default=False, db_index=True)
+    allow_comments = models.BooleanField(_(u'Allow comments'), default=False)
     pass_access = models.CharField(_(u'Password'), max_length=64, blank=True, null=True)
 
     json = models.JSONField(_(u'Json content'), default=dict, editable=False)
@@ -151,7 +151,8 @@ class Content(AL_Node, Base):
             prefix = ''
         else:
             prefix = '/%s' % self.language
-        return prefix + reverse('content_page', args=[self.url])
+        url = self.url if self.slug else reverse('content:page', args=[self.uuid])
+        return f'{prefix}/{url}/'
 
 
 class Files(Base):

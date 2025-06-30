@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-CLIENT = source ./.venv/bin/activate
+CLIENT = source ./.venv/bin/activate &&
 CURRENT_DIR = $(shell pwd)
 
 all: ;@echo 'Run with option (install, run, syncdb, etc...)'
@@ -22,58 +22,58 @@ pull:
 	git pull
 
 run:
-	poetry run python src/manage.py runserver 0.0.0.0:8000;
+	$(CLIENT) python src/manage.py runserver 0.0.0.0:8001;
 
 uwsgi:
-	$(CLIENT) && uwsgi --ini etc/uwsgi.ini:prod
+	$(CLIENT) uwsgi --ini etc/uwsgi.ini:prod
 
 reload:
-	$(CLIENT) && uwsgi --reload var/uwsgi.pid
+	$(CLIENT) uwsgi --reload var/uwsgi.pid
 
 kill:
 	kill -9 `cat var/uwsgi.pid`
 
 celery:
-	poetry run celery --workdir=src -A project worker -l debug -n worker.low -Q low
+	$(CLIENT) celery --workdir=src -A project worker -l debug -n worker.low -Q low
 
 celery-inspect:
-	poetry run celery --workdir=src -A project inspect active
+	$(CLIENT) celery --workdir=src -A project inspect active
 
 flower:
-	$(CLIENT) && celery --workdir=src -A project  flower --address=127.0.0.1 --port=5555
+	$(CLIENT) celery --workdir=src -A project  flower --address=127.0.0.1 --port=5555
 
 static:
-	poetry run python src/manage.py collectstatic --noinput
+	$(CLIENT) python src/manage.py collectstatic --noinput
 
 console:
-	poetry run python src/manage.py ${app} ${user} --traceback
+	$(CLIENT) python src/manage.py ${app} ${user} --traceback
 
 migrate:
-	poetry run python src/manage.py migrate ${app}
+	$(CLIENT) python src/manage.py migrate ${app}
 
 fakemigrate:
-	poetry run python src/manage.py migrate --fake ${app}
+	$(CLIENT) python src/manage.py migrate --fake ${app}
 
 commit:
-	poetry run python src/manage.py makemigrations ${app}
+	$(CLIENT) python src/manage.py makemigrations ${app}
 
 locale:
-	poetry run python src/manage.py makemessages -a -s --ignore=env/* --ignore=var/* --keep-pot  -v3 --no-location \
-	&& poetry run python src/manage.py makemessages_djangojs -a -s --domain='djangojs' --ignore='*/node_modules/*' --ignore='*/build/*' --ignore='*/libs/*' --extension='js,jsx' --keep-pot  -v3 --no-location
+	$(CLIENT) python src/manage.py makemessages -a -s --ignore=env/* --ignore=var/* --keep-pot  -v3 --no-location \
+	&& $(CLIENT) python src/manage.py makemessages_djangojs -a -s --domain='djangojs' --ignore='*/node_modules/*' --ignore='*/build/*' --ignore='*/libs/*' --extension='js,jsx' --keep-pot  -v3 --no-location
 
 compilemessages:
-	poetry run python src/manage.py compilemessages
+	$(CLIENT) python src/manage.py compilemessages
 
 help:
-	poetry run python src/manage.py help
+	$(CLIENT) python src/manage.py help
 
 # password managment
 passwd:
-	poetry run python src/manage.py changepassword ${user}
+	$(CLIENT) python src/manage.py changepassword ${user}
 
 adduser:
-	poetry run python src/manage.py createsuperuser
+	$(CLIENT) python src/manage.py createsuperuser
 
 shell:
-	poetry run python src/manage.py shell
+	$(CLIENT) python src/manage.py shell
 

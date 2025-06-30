@@ -10,8 +10,8 @@ from .models import Content
 
 class ContentAdmin(TreeAdmin):
     form = movenodeform_factory(Content)
-    list_display = ('title', 'is_enabled', 'is_hidden', 'type', 'slug')
-    list_filter = ['is_enabled', 'is_hidden', 'type', 'type']
+    list_display = ('title', 'is_hidden', 'type', 'slug')
+    list_filter = ['is_hidden', 'type', 'type']
     prepopulated_fields = {'slug': ('title',)}
 
 
@@ -19,10 +19,7 @@ class ContentAdmin(TreeAdmin):
         form = super(ContentAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['slug'].widget.attrs['style'] = 'width: 50%;'
         form.base_fields['title'].widget.attrs['style'] = 'width: 50%;'
-        form.base_fields['meta_keywords'].widget.attrs['style'] = 'width: 50%;'
-        form.base_fields['meta_description'].widget.attrs['style'] = 'width: 50%;'
         form.base_fields['tags'].widget.attrs['style'] = 'width: 50%;'
-        form.base_fields['category'].widget.attrs['style'] = 'min-width: 200px;'
         return form
 
     def save_model(self, request, obj, form, change):

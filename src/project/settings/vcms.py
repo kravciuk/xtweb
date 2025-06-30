@@ -22,11 +22,26 @@ VCMS_TEMPLATES = (
 # Configure CKEDITOR
 # -----------------------------------------------------------------------------------
 CKEDITOR_5_FILE_UPLOAD_PERMISSION = 'staff'
+CKEDITOR_5_FILE_STORAGE = "content.storage.ContentStorage"
 CKEDITOR_5_CONFIGS = {
   'default': {
       'toolbar': ['heading', '|', 'bold', 'italic', 'link',
-                  'bulletedList', 'numberedList', 'blockQuote', 'imageUpload', ],
-      'language': 'de',
+                'bulletedList', 'numberedList', 'blockQuote', 'imageUpload',
+                'codeBlock', 'sourceEditing',
+                ],
+      'language': 'en',
+      'image': {
+          'toolbar': ['imageTextAlternative', '|', 'imageStyle:alignLeft',
+                      'imageStyle:alignRight', 'imageStyle:alignCenter', 'imageStyle:side', '|'],
+          'styles': [
+              'full',
+              'side',
+              'alignLeft',
+              'alignRight',
+              'alignCenter',
+          ]
+
+      },
   },
 }
 

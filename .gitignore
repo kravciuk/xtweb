@@ -48,3 +48,4 @@ etc/nginx.conf
 etc/supervisor.conf
 etc/uwsgi.ini
 src/project/settings/local/*.py
+Makefile

@@ -5,6 +5,7 @@ import re
 import time
 from django.conf import settings
 from django import template
+from django.db.models import Q
 from django.utils.translation import gettext_lazy as _, get_language
 from django.utils.safestring import mark_safe
 from django.contrib.contenttypes.models import ContentType
@@ -73,7 +74,9 @@ def vcms_pages(context, *args, **kwargs):
     limit = kwargs.get('limit', 10)
     page = context['request'].GET.get('page', 1)
 
-    rs = Content.objects.filter(is_enabled=True)
+    log.debug(context['request'].user.is_authenticated)
+    user_id = context['request'].user.id if context['request'].user.is_authenticated is True else 0
+    rs = Content.objects.filter(Q(is_published=True, is_hidden=False)|Q(user_id=user_id))
     if parent:
         try:
             rs = rs.filter(url=parent).get().get_children()
@@ -83,7 +86,7 @@ def vcms_pages(context, *args, **kwargs):
     if language:
         rs = rs.filter(language=language)
 
-    rs = rs.filter(is_hidden=False).order_by('-date_published', '-id')
+    rs = rs.order_by('-date_published', '-id')
     paginator = Paginator(rs, limit)
 
     try:

@@ -3,8 +3,8 @@ __author__ = 'Vadim Kravciuk, vadim@kravciuk.com'
 
 from django import forms
 from content.models import Content
-from django_select2.forms import Select2Widget, HeavySelect2Widget, ModelSelect2Widget
-from treebeard.forms import MoveNodeForm, movenodeform_factory
+from django_select2.forms import Select2Widget
+from django_ckeditor_5.widgets import CKEditor5Widget
 
 
 class MyWidget(Select2Widget):
@@ -37,7 +37,7 @@ class MyWidget(Select2Widget):
 
 class PageContentForm(forms.ModelForm):
     after = forms.CharField(widget=forms.HiddenInput(), required=False)
-    page = forms.CharField(widget=forms.HiddenInput(), required=False)
+    # type = forms.CharField(widget=forms.HiddenInput(), required=False)
     rehost = forms.BooleanField(required=False, initial=False)
 
     def __init__(self, *args, **kwargs):
@@ -46,7 +46,13 @@ class PageContentForm(forms.ModelForm):
 
     class Meta:
         model = Content
-        exclude = ['show_count', 'view_count', 'custom', 'user', 'rating', 'type', 'id', 'language', 'json']
+        exclude = ['show_count', 'view_count', 'custom', 'user', 'rating', 'type', 'id', 'language', 'json', 'sib_order', 'parent']
+
+        widgets = {
+            "content": CKEditor5Widget(
+                attrs={"class": "django_ckeditor_5"}, config_name="default"
+            )
+        }
 
     class Media:
         css = {
